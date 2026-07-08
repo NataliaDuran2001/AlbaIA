@@ -14,7 +14,9 @@ async function ensureSession() {
   // Guest: create a Supabase anonymous session on first meaningful action.
   const { data, error } = await supabase.auth.signInAnonymously()
   if (error || !data.user) {
-    throw new Error(`Could not start a session: ${error?.message ?? "unknown error"}`)
+    // Log the real cause server-side; surface a clean message to the caller.
+    console.error("[action] start guest session:", error)
+    throw new Error("Could not start a session. Please try again.")
   }
   return { supabase, user: data.user }
 }

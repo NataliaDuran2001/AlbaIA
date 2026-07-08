@@ -131,11 +131,18 @@ export const es: Dictionary = {
     fullNamePlaceholder: "ej. María López",
     emailPlaceholder: "tu@ejemplo.com",
     errors: {
+      // A nivel de campo (se validan en el navegador antes de enviar).
       fullName: "Ingresa tu nombre completo.",
       email: "El correo es obligatorio.",
-      emailInvalid: "Ingresa un correo electrónico válido.",
+      emailInvalid: "Ingresa un correo electrónico válido — por ejemplo, tu@ejemplo.com.",
       password: "La contraseña es obligatoria.",
-      passwordShort: "La contraseña debe tener al menos 8 caracteres.",
+      passwordShort: "Tu contraseña necesita al menos 8 caracteres.",
+      // Resultados devueltos por el servidor, según AuthErrorCode.
+      missing_fields: "Completa todos los campos para continuar.",
+      password_short: "Tu contraseña necesita al menos 8 caracteres.",
+      email_taken: "Ya existe una cuenta con este correo. Mejor inicia sesión.",
+      invalid_credentials: "Ese correo o contraseña no coinciden. Revísalos e inténtalo de nuevo.",
+      server_error: "Algo salió mal de nuestro lado. Inténtalo de nuevo en un momento.",
     },
   },
   checklist: {
