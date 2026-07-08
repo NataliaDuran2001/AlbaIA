@@ -33,6 +33,13 @@ export async function getBusinessProfile(userId: string) {
   return data
 }
 
+// The selected country is stored in business_profiles.city (see profile-form).
+export async function getUserCountry(userId: string): Promise<string | null> {
+  const profile = await getBusinessProfile(userId)
+  const value = (profile as { city?: string | null } | null)?.city
+  return value ?? null
+}
+
 export async function getRoadmap(userId: string) {
   const supabase = await createClient()
   const { data } = await supabase
@@ -46,6 +53,7 @@ export async function getRoadmap(userId: string) {
   return {
     id: data.id as string,
     recommendedStructure: data.recommended_structure as string,
+    rationale: (data.rationale as string | null) ?? null,
     steps: (data.steps as Roadmap["steps"]) ?? [],
   }
 }

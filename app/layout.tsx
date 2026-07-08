@@ -2,6 +2,8 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { LocaleProvider } from '@/lib/i18n/locale-context'
+import { getLocale } from '@/lib/i18n/server'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -22,15 +24,16 @@ export const viewport: Viewport = {
   themeColor: '#0052ff',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const locale = await getLocale()
   return (
-    <html lang="en" className={`${inter.variable} bg-background`}>
+    <html lang={locale} className={`${inter.variable} bg-background`}>
       <body className="font-sans antialiased">
-        {children}
+        <LocaleProvider locale={locale}>{children}</LocaleProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

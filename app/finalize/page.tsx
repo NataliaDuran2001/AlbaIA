@@ -2,10 +2,10 @@ import { redirect } from "next/navigation"
 import { AppHeader } from "@/components/app-header"
 import { FinalizeForm } from "@/components/finalize/finalize-form"
 import { getCurrentUser, getDocuments } from "@/lib/data"
-import { getDictionary } from "@/lib/i18n"
+import { getT } from "@/lib/i18n/server"
 
 export default async function FinalizePage() {
-  const t = getDictionary()
+  const t = await getT()
 
   const user = await getCurrentUser()
   if (!user) redirect("/login")

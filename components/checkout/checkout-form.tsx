@@ -42,26 +42,27 @@ export function CheckoutForm({ plan }: { plan: Plan }) {
   const [pending, startTransition] = useTransition()
 
   function validate(): boolean {
+    const e = t.checkout.errors
     const next: Errors = {}
-    if (!email.trim()) next.email = "Email is required."
-    else if (!EMAIL_RE.test(email.trim())) next.email = "Enter a valid email address."
+    if (!email.trim()) next.email = e.email
+    else if (!EMAIL_RE.test(email.trim())) next.email = e.emailInvalid
 
     if (method === "card") {
-      if (!name.trim()) next.name = "Name is required."
-      else if (!NAME_RE.test(name.trim())) next.name = "Use letters only, as shown on the card."
+      if (!name.trim()) next.name = e.name
+      else if (!NAME_RE.test(name.trim())) next.name = e.nameInvalid
 
-      if (!card.trim()) next.card = "Card number is required."
-      else if (digits(card).length !== 16) next.card = "Enter the full 16-digit card number."
+      if (!card.trim()) next.card = e.card
+      else if (digits(card).length !== 16) next.card = e.cardInvalid
 
-      if (!expiry.trim()) next.expiry = "Required."
-      else if (!/^\d{2}\/\d{2}$/.test(expiry)) next.expiry = "Use MM/YY."
+      if (!expiry.trim()) next.expiry = e.expiry
+      else if (!/^\d{2}\/\d{2}$/.test(expiry)) next.expiry = e.expiryFormat
       else {
         const mm = Number(expiry.slice(0, 2))
-        if (mm < 1 || mm > 12) next.expiry = "Invalid month."
+        if (mm < 1 || mm > 12) next.expiry = e.expiryMonth
       }
 
-      if (!cvc.trim()) next.cvc = "Required."
-      else if (!/^\d{3,4}$/.test(cvc)) next.cvc = "3–4 digits."
+      if (!cvc.trim()) next.cvc = e.cvc
+      else if (!/^\d{3,4}$/.test(cvc)) next.cvc = e.cvcFormat
     }
 
     setErrors(next)
@@ -78,7 +79,7 @@ export function CheckoutForm({ plan }: { plan: Plan }) {
       // Replace with a real provider webhook before production.
       const res = await confirmCheckout(plan.tier)
       if (!res.ok) {
-        setFormError(res.error ?? "Something went wrong.")
+        setFormError(res.error ?? t.common.somethingWrong)
         return
       }
       router.replace(`/checkout/success?plan=${plan.tier}`)
@@ -278,7 +279,7 @@ export function CheckoutForm({ plan }: { plan: Plan }) {
           </span>
         </div>
         <ul className="mt-4 flex flex-col gap-2 border-t border-border pt-4">
-          {plan.features.map((f) => (
+          {t.plans[plan.tier].features.map((f) => (
             <li key={f} className="flex items-start gap-2 text-sm text-muted-foreground">
               <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
               {f}

@@ -4,13 +4,13 @@ import { ArrowRight, Check, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { getPlan } from "@/lib/billing/plans"
 import { getCurrentUser, getSubscription } from "@/lib/data"
-import { getDictionary } from "@/lib/i18n"
+import { getLocale, getT } from "@/lib/i18n/server"
 
-function formatDate(iso: string | null): string | null {
+function formatDate(iso: string | null, bcp47: string): string | null {
   if (!iso) return null
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return null
-  return d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+  return d.toLocaleDateString(bcp47, { year: "numeric", month: "long", day: "numeric" })
 }
 
 export default async function CheckoutSuccessPage({
@@ -18,7 +18,7 @@ export default async function CheckoutSuccessPage({
 }: {
   searchParams: Promise<{ plan?: string }>
 }) {
-  const t = getDictionary()
+  const t = await getT()
   const { plan: planParam } = await searchParams
 
   const user = await getCurrentUser()
@@ -27,8 +27,9 @@ export default async function CheckoutSuccessPage({
   const plan = getPlan(planParam ?? "")
   if (!plan) redirect("/pricing")
 
+  const locale = await getLocale()
   const subscription = await getSubscription(user.id)
-  const nextBilling = formatDate(subscription?.current_period_end ?? null)
+  const nextBilling = formatDate(subscription?.current_period_end ?? null, locale === "es" ? "es-GT" : "en-US")
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-6 py-12">
@@ -62,7 +63,7 @@ export default async function CheckoutSuccessPage({
           <div className="mt-4 border-t border-border pt-4">
             <p className="mb-3 text-sm font-semibold text-foreground">{t.success.unlocked}</p>
             <ul className="flex flex-col gap-2">
-              {plan.features.map((f) => (
+              {t.plans[plan.tier].features.map((f) => (
                 <li key={f} className="flex items-start gap-2 text-sm text-muted-foreground">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                   {f}

@@ -3,11 +3,11 @@ import { Check } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { PLANS } from "@/lib/billing/plans"
-import { getDictionary } from "@/lib/i18n"
+import { getT } from "@/lib/i18n/server"
 import { cn } from "@/lib/utils"
 
-export default function PricingPage() {
-  const t = getDictionary()
+export default async function PricingPage() {
+  const t = await getT()
 
   return (
     <main className="mx-auto w-full max-w-[1280px] px-6 py-14 lg:px-16">
@@ -35,10 +35,10 @@ export default function PricingPage() {
               <span className="text-4xl font-semibold tracking-tight text-foreground">${plan.price}</span>
               <span className="text-sm text-muted-foreground">{t.pricing.perMonth}</span>
             </div>
-            <p className="mt-2 text-sm text-muted-foreground">{plan.tagline}</p>
+            <p className="mt-2 text-sm text-muted-foreground">{t.plans[plan.tier].tagline}</p>
 
             <ul className="mt-6 flex flex-1 flex-col gap-3">
-              {plan.features.map((feature) => (
+              {t.plans[plan.tier].features.map((feature) => (
                 <li key={feature} className="flex items-start gap-2.5 text-sm text-foreground">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                   {feature}

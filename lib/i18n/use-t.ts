@@ -1,9 +1,10 @@
 "use client"
 
-import { getDictionary, DEFAULT_LOCALE, type Locale } from "./index"
+import { getDictionary } from "./index"
+import { useLocale } from "./locale-context"
 
-// Thin hook so client components read strings the same way server code does.
-// When LATAM locales land, this can read locale from context/cookie.
-export function useT(locale: Locale = DEFAULT_LOCALE) {
-  return getDictionary(locale)
+// Client hook: reads the active locale from context (seeded by the root layout
+// from the `locale` cookie) and returns the matching dictionary.
+export function useT() {
+  return getDictionary(useLocale())
 }

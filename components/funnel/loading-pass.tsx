@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Loader2 } from "lucide-react"
 import { Brand } from "@/components/brand"
+import { useT } from "@/lib/i18n/use-t"
 
 interface LoadingPassProps {
   title: string
@@ -16,6 +17,7 @@ interface LoadingPassProps {
 }
 
 export function LoadingPass({ title, subtitle, action, nextHref, fallbackHref }: LoadingPassProps) {
+  const t = useT()
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const started = useRef(false)
@@ -31,11 +33,11 @@ export function LoadingPass({ title, subtitle, action, nextHref, fallbackHref }:
         if (res.ok) {
           router.replace(nextHref)
         } else {
-          setError(res.error ?? "Something went wrong.")
+          setError(res.error ?? t.common.somethingWrong)
         }
       })
       .catch((e) => {
-        setError(e instanceof Error ? e.message : "Unexpected error.")
+        setError(e instanceof Error ? e.message : t.common.somethingWrong)
       })
   }, [action, nextHref, router])
 
@@ -51,7 +53,7 @@ export function LoadingPass({ title, subtitle, action, nextHref, fallbackHref }:
             onClick={() => router.replace(fallbackHref)}
             className="text-sm font-medium text-primary underline underline-offset-4"
           >
-            Start over
+            {t.roadmap.startOver}
           </button>
         </div>
       ) : (

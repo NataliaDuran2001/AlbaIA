@@ -11,6 +11,9 @@ export const en = {
     cancel: "Cancel",
     locked: "Locked",
     upgrade: "Upgrade",
+    of: "of",
+    language: "Language",
+    somethingWrong: "Something went wrong.",
   },
   nav: {
     process: "Process",
@@ -31,6 +34,7 @@ export const en = {
     trustA: "Recommended legal structure",
     trustB: "Step-by-step roadmap",
     trustC: "Verified local partners",
+    heroAlt: "A small business owner standing confidently in their shop",
   },
   analyzing: {
     pass1Title: "Analyzing your idea",
@@ -60,10 +64,16 @@ export const en = {
     countryPlaceholder: "Select a country…",
     countries: ["Guatemala", "Bolivia", "Peru", "Chile", "Argentina"],
     submit: "Continue",
+    errors: {
+      size: "Please select a business size.",
+      industry: "Please select an industry.",
+      country: "Please select a country.",
+    },
   },
   roadmap: {
     eyebrow: "Recommended structure",
     supporting: "Here's the exact path AlbaIA mapped for your business.",
+    whyTitle: "Why this structure",
     previewTitle: "Your formalization roadmap",
     saveCta: "Start the process",
     startOver: "Start over",
@@ -90,6 +100,13 @@ export const en = {
     passwordHint: "At least 8 characters.",
     fullNamePlaceholder: "e.g. María López",
     emailPlaceholder: "you@example.com",
+    errors: {
+      fullName: "Please enter your full name.",
+      email: "Email is required.",
+      emailInvalid: "Enter a valid email address.",
+      password: "Password is required.",
+      passwordShort: "Password must be at least 8 characters.",
+    },
   },
   checklist: {
     title: "Your formalization checklist",
@@ -119,6 +136,25 @@ export const en = {
     maybeLater: "Maybe later — continue on the free plan",
     mostPopular: "Most popular",
   },
+  plans: {
+    basic: {
+      tagline: "Everything to formalize solo.",
+      features: ["Full formalization checklist", "AI document validation", "3 AI consultant queries", "Document vault"],
+    },
+    professional: {
+      tagline: "Extra guidance when it matters.",
+      features: ["Everything in Basic", "1 specialist call", "Priority review", "Unlimited AI validation"],
+    },
+    enterprise: {
+      tagline: "White-glove formalization.",
+      features: [
+        "Everything in Professional",
+        "Lawyer & accountant credits",
+        "Partner catalog scheduling",
+        "Dedicated support",
+      ],
+    },
+  },
   checkout: {
     title: "Complete your subscription",
     subtitle: "You're subscribing to the",
@@ -144,6 +180,19 @@ export const en = {
     paypalNote: "You'll be redirected to PayPal to complete your payment (demo).",
     payPaypal: "Continue with PayPal",
     securedBy: "Payments secured by Stripe",
+    errors: {
+      email: "Email is required.",
+      emailInvalid: "Enter a valid email address.",
+      name: "Name is required.",
+      nameInvalid: "Use letters only, as shown on the card.",
+      card: "Card number is required.",
+      cardInvalid: "Enter the full 16-digit card number.",
+      expiry: "Required.",
+      expiryFormat: "Use MM/YY.",
+      expiryMonth: "Invalid month.",
+      cvc: "Required.",
+      cvcFormat: "3–4 digits.",
+    },
   },
   success: {
     title: "Subscription active",
@@ -220,5 +269,3 @@ export const en = {
     supportBody: "Need help? Reach out and our team will assist with your formalization.",
   },
 } as const
-
-export type Dictionary = typeof en

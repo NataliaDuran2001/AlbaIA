@@ -37,7 +37,7 @@ export function FinalizeForm({ initialUploaded }: { initialUploaded: Record<Slot
     const res = await uploadDocument(fd)
     setPendingSlot(null)
     if (!res.ok) {
-      setError(res.error ?? "Upload failed.")
+      setError(res.error ?? t.common.somethingWrong)
       return
     }
     setUploaded((prev) => ({ ...prev, [slot]: true }))
@@ -48,7 +48,7 @@ export function FinalizeForm({ initialUploaded }: { initialUploaded: Record<Slot
     startSubmit(async () => {
       const res = await submitFinalization()
       if (!res.ok) {
-        setError(res.error ?? "Something went wrong.")
+        setError(res.error ?? t.common.somethingWrong)
         return
       }
       router.replace("/complete")

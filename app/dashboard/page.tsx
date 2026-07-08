@@ -13,7 +13,7 @@ import {
   getTier,
 } from "@/lib/data"
 import { tierLabel } from "@/lib/gating"
-import { getDictionary } from "@/lib/i18n"
+import { getT } from "@/lib/i18n/server"
 
 function prettyName(storagePath: string): string {
   const base = storagePath.split("/").pop() ?? storagePath
@@ -21,7 +21,7 @@ function prettyName(storagePath: string): string {
 }
 
 export default async function DashboardPage() {
-  const t = getDictionary()
+  const t = await getT()
 
   const user = await getCurrentUser()
   if (!user || user.is_anonymous) redirect("/login")
@@ -55,7 +55,7 @@ export default async function DashboardPage() {
             <div className="mt-4 flex flex-col gap-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="font-medium text-foreground">
-                  {approved} of {total} {t.dashboard.milestonesComplete}
+                  {approved} {t.common.of} {total} {t.dashboard.milestonesComplete}
                 </span>
                 <span className="text-muted-foreground">{Math.round(pct)}%</span>
               </div>

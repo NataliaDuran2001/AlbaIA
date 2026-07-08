@@ -3,14 +3,14 @@ import { Lock } from "lucide-react"
 import { Brand } from "@/components/brand"
 import { CheckoutForm } from "@/components/checkout/checkout-form"
 import { getPlan } from "@/lib/billing/plans"
-import { getDictionary } from "@/lib/i18n"
+import { getT } from "@/lib/i18n/server"
 
 export default async function CheckoutPage({
   searchParams,
 }: {
   searchParams: Promise<{ plan?: string }>
 }) {
-  const t = getDictionary()
+  const t = await getT()
   const { plan: planParam } = await searchParams
   const plan = getPlan(planParam ?? "enterprise")
   if (!plan) redirect("/pricing")

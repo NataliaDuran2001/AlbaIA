@@ -70,7 +70,7 @@ export function ChecklistView({ items: initialItems, tier }: { items: ChecklistI
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between text-sm">
           <span className="font-medium text-foreground">
-            {done} of {total} {t.checklist.stepsComplete}
+            {done} {t.common.of} {total} {t.checklist.stepsComplete}
           </span>
           <span className="text-muted-foreground">{Math.round(pct)}%</span>
         </div>

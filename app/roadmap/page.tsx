@@ -2,33 +2,49 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import { ArrowRight, Lock } from "lucide-react"
 import { Brand } from "@/components/brand"
+import { CountryFlag } from "@/components/country-flag"
+import { LanguageSwitch } from "@/components/language-switch"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { getCurrentUser, getRoadmap } from "@/lib/data"
-import { getDictionary } from "@/lib/i18n"
+import { getCurrentUser, getRoadmap, getUserCountry } from "@/lib/data"
+import { getT } from "@/lib/i18n/server"
 
 export default async function RoadmapPage() {
-  const t = getDictionary()
+  const t = await getT()
 
   const user = await getCurrentUser()
   if (!user) redirect("/")
 
-  const roadmap = await getRoadmap(user.id)
+  const [roadmap, country] = await Promise.all([getRoadmap(user.id), getUserCountry(user.id)])
   if (!roadmap) redirect("/profile")
 
   return (
-    <main className="mx-auto flex min-h-[100svh] w-full max-w-3xl flex-col justify-center px-6 py-6">
+    <main className="relative mx-auto flex min-h-[100svh] w-full max-w-3xl flex-col justify-center px-6 py-6">
+      <LanguageSwitch className="absolute right-4 top-4" />
       <div className="flex justify-center">
         <Brand />
       </div>
 
-      <div className="mx-auto mt-5 flex max-w-xl flex-col gap-1.5 text-center">
+      {country && (
+        <div className="mt-4 flex justify-center">
+          <CountryFlag country={country} />
+        </div>
+      )}
+
+      <div className="mx-auto mt-4 flex max-w-xl flex-col gap-1.5 text-center">
         <span className="label-caps">{t.roadmap.eyebrow}</span>
         <h1 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
           {roadmap.recommendedStructure}
         </h1>
         <p className="text-sm text-muted-foreground text-pretty">{t.roadmap.supporting}</p>
       </div>
+
+      {roadmap.rationale && (
+        <div className="mx-auto mt-5 w-full max-w-xl rounded-[8px] border border-border bg-panel p-4">
+          <span className="label-caps">{t.roadmap.whyTitle}</span>
+          <p className="mt-1 text-sm leading-relaxed text-foreground text-pretty">{roadmap.rationale}</p>
+        </div>
+      )}
 
       <div className="mt-6 flex items-baseline justify-between gap-4">
         <h2 className="text-lg font-semibold">{t.roadmap.previewTitle}</h2>

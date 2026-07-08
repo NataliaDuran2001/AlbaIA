@@ -3,9 +3,11 @@ import { CheckCircle2, FileText, Users } from "lucide-react"
 import { MarketingHeader } from "@/components/marketing-header"
 import { IdeaForm } from "@/components/funnel/idea-form"
 import { getDictionary } from "@/lib/i18n"
+import { getLocale } from "@/lib/i18n/server"
 
-export default function LandingPage() {
-  const t = getDictionary()
+export default async function LandingPage() {
+  const locale = await getLocale()
+  const t = getDictionary(locale)
 
   const trust = [
     { icon: CheckCircle2, label: t.landing.trustA },
@@ -15,7 +17,7 @@ export default function LandingPage() {
 
   return (
     <div className="flex min-h-[100svh] flex-col bg-background">
-      <MarketingHeader />
+      <MarketingHeader locale={locale} />
       <main className="mx-auto flex w-full max-w-[1280px] flex-1 items-center px-6 py-6 lg:px-16">
         <div className="grid w-full items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <div className="flex flex-col gap-3">
@@ -42,7 +44,7 @@ export default function LandingPage() {
           <div className="relative hidden aspect-[4/3] max-h-[70vh] w-full overflow-hidden rounded-[8px] border border-border bg-panel lg:block">
             <Image
               src="/hero-entrepreneur.webp"
-              alt="A small business owner standing confidently in their shop"
+              alt={t.landing.heroAlt}
               fill
               priority
               className="object-cover"

@@ -1,10 +1,10 @@
 import Link from "next/link"
 import { Brand } from "@/components/brand"
 import { Button } from "@/components/ui/button"
-import { getDictionary } from "@/lib/i18n"
+import { getT } from "@/lib/i18n/server"
 
-export default function NotFound() {
-  const t = getDictionary()
+export default async function NotFound() {
+  const t = await getT()
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-8 bg-background px-6 text-center">
       <Brand />

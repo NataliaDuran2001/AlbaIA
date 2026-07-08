@@ -24,12 +24,13 @@ export function AuthForm({ mode }: { mode: "signup" | "login" }) {
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
   function validate() {
+    const e = t.auth.errors
     const next: typeof errors = {}
-    if (isSignup && !fullName.trim()) next.fullName = "Please enter your full name."
-    if (!email.trim()) next.email = "Email is required."
-    else if (!EMAIL_RE.test(email.trim())) next.email = "Enter a valid email address."
-    if (!password) next.password = "Password is required."
-    else if (isSignup && password.length < 8) next.password = "Password must be at least 8 characters."
+    if (isSignup && !fullName.trim()) next.fullName = e.fullName
+    if (!email.trim()) next.email = e.email
+    else if (!EMAIL_RE.test(email.trim())) next.email = e.emailInvalid
+    if (!password) next.password = e.password
+    else if (isSignup && password.length < 8) next.password = e.passwordShort
     setErrors(next)
     return Object.keys(next).length === 0
   }
@@ -44,7 +45,7 @@ export function AuthForm({ mode }: { mode: "signup" | "login" }) {
         ? await signUpAction({ email, password, fullName })
         : await signInAction({ email, password })
       if (!res.ok) {
-        setError(res.error ?? "Something went wrong.")
+        setError(res.error ?? t.common.somethingWrong)
         return
       }
       router.replace("/checklist")

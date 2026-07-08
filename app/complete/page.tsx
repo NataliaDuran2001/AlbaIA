@@ -3,10 +3,10 @@ import { redirect } from "next/navigation"
 import { ArrowRight, PartyPopper } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { getChecklistItems, getCurrentUser, getRoadmap } from "@/lib/data"
-import { getDictionary } from "@/lib/i18n"
+import { getT } from "@/lib/i18n/server"
 
 export default async function CompletePage() {
-  const t = getDictionary()
+  const t = await getT()
 
   const user = await getCurrentUser()
   if (!user) redirect("/login")

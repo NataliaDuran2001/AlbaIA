@@ -4,10 +4,10 @@ import { ChecklistView } from "@/components/checklist/checklist-view"
 import { createClient } from "@/lib/supabase/server"
 import { seedChecklistIfEmpty } from "@/lib/checklist-seed"
 import { getChecklistItems, getCurrentUser, getTier } from "@/lib/data"
-import { getDictionary } from "@/lib/i18n"
+import { getT } from "@/lib/i18n/server"
 
 export default async function ChecklistPage() {
-  const t = getDictionary()
+  const t = await getT()
 
   const user = await getCurrentUser()
   if (!user) redirect("/login")

@@ -30,16 +30,16 @@ export function ProfileForm() {
   function onSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
-    if (!size) return setError("Please select a business size.")
-    if (!industry) return setError("Please select an industry.")
-    if (!country) return setError("Please select a country.")
+    if (!size) return setError(t.profile.errors.size)
+    if (!industry) return setError(t.profile.errors.industry)
+    if (!country) return setError(t.profile.errors.country)
 
     startTransition(async () => {
       // Country is stored in the existing `city` field (business_profiles.city)
       // to avoid a schema change; the roadmap logic reads it as the location.
       const res = await submitProfile({ size, industry, city: country })
       if (!res.ok) {
-        setError(res.error ?? "Something went wrong.")
+        setError(res.error ?? t.common.somethingWrong)
         return
       }
       router.push("/analyzing/roadmap")

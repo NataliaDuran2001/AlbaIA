@@ -63,9 +63,7 @@ export function PartnersGrid({ partners, creditsByKind, canSchedule }: Props) {
             {canSchedule ? (
               <div className="mt-auto flex flex-col gap-2">
                 <p className="text-sm text-muted-foreground">
-                  {noCredits
-                    ? t.partners.noCredits
-                    : `${remaining} ${t.partners.kindWord[partner.kind]} ${t.partners.creditsLeft}`}
+                  {noCredits ? t.partners.noCredits : `${remaining} ${t.partners.creditsLeft}`}
                 </p>
                 {scheduled[partner.id] ? (
                   <p className="inline-flex items-center gap-2 text-sm font-medium text-success-foreground">

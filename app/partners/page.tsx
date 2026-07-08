@@ -6,10 +6,10 @@ import { PartnersGrid } from "@/components/partners/partners-grid"
 import { Button } from "@/components/ui/button"
 import { PARTNERS, getConsultationCredits, getCurrentUser, getTier } from "@/lib/data"
 import { can } from "@/lib/gating"
-import { getDictionary } from "@/lib/i18n"
+import { getT } from "@/lib/i18n/server"
 
 export default async function PartnersPage() {
-  const t = getDictionary()
+  const t = await getT()
 
   const user = await getCurrentUser()
   if (!user) redirect("/login")

@@ -1,12 +1,14 @@
 import { Brand } from "@/components/brand"
+import { LanguageSwitch } from "@/components/language-switch"
 import { AuthForm } from "@/components/auth/auth-form"
-import { getDictionary } from "@/lib/i18n"
+import { getT } from "@/lib/i18n/server"
 
-export default function LoginPage() {
-  const t = getDictionary()
+export default async function LoginPage() {
+  const t = await getT()
 
   return (
-    <main className="flex min-h-[100svh] flex-col items-center justify-center px-6 py-8">
+    <main className="relative flex min-h-[100svh] flex-col items-center justify-center px-6 py-8">
+      <LanguageSwitch className="absolute right-4 top-4" />
       <Brand />
       <div className="mt-8 w-full max-w-md">
         <div className="flex flex-col gap-2 text-center">

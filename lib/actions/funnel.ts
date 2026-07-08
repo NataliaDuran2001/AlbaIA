@@ -105,7 +105,7 @@ export async function buildRoadmapStep() {
 
   if (!profile?.idea_text || !profile.size) return { ok: false, error: "Missing profile data." }
 
-  const roadmap = await analyzeBusiness(profile.idea_text, {
+  const { roadmap, generatedBy, model, catalogVersion } = await analyzeBusiness(profile.idea_text, {
     size: profile.size as BusinessSize,
     industry: profile.industry as Industry,
     city: profile.city ?? "",
@@ -116,7 +116,11 @@ export async function buildRoadmapStep() {
   await supabase.from("roadmaps").insert({
     user_id: user.id,
     recommended_structure: roadmap.recommendedStructure,
+    rationale: roadmap.rationale,
     steps: roadmap.steps,
+    generated_by: generatedBy,
+    model,
+    catalog_version: catalogVersion,
   })
 
   return { ok: true, recommendedStructure: roadmap.recommendedStructure }

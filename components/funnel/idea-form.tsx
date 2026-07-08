@@ -22,7 +22,7 @@ export function IdeaForm() {
     startTransition(async () => {
       const res = await submitIdea(idea)
       if (!res.ok) {
-        setError(res.error ?? "Something went wrong.")
+        setError(res.error ?? t.common.somethingWrong)
         return
       }
       router.push("/analyzing")

@@ -2,10 +2,10 @@ import Link from "next/link"
 import { Clock } from "lucide-react"
 import { AppHeader } from "@/components/app-header"
 import { Button } from "@/components/ui/button"
-import { getDictionary } from "@/lib/i18n"
+import { getT } from "@/lib/i18n/server"
 
-export function EmptyState({ title, body }: { title: string; body: string }) {
-  const t = getDictionary()
+export async function EmptyState({ title, body }: { title: string; body: string }) {
+  const t = await getT()
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
