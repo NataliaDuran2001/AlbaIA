@@ -104,9 +104,13 @@ alter table public.documentos_regulacion enable row level security;
 alter table public.chunks_regulacion enable row level security;
 
 -- Política de lectura pública (los chunks legales no son datos personales)
+-- drop-if-exists antes de create para que la migración sea re-ejecutable sin error
+-- (create policy no soporta "if not exists").
+drop policy if exists "chunks_read_all" on public.chunks_regulacion;
 create policy "chunks_read_all" on public.chunks_regulacion
   for select using (true);
 
+drop policy if exists "docs_read_all" on public.documentos_regulacion;
 create policy "docs_read_all" on public.documentos_regulacion
   for select using (true);
 

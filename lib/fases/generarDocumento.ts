@@ -183,6 +183,32 @@ Reglas estrictas:
 4. Este es un borrador informativo; siempre incluye al final: "AVISO: Este documento es un borrador generado por AlbaIA. Debe ser revisado por un abogado o contador antes de presentarse oficialmente."
 5. Responde ÚNICAMENTE con el JSON indicado, sin prosa adicional.`
 
+/**
+ * Extrae el primer objeto JSON balanceado de un texto que puede traer prosa o
+ * razonamiento alrededor. Cuenta llaves respetando strings y escapes, así una
+ * "}" dentro del texto del documento no corta el objeto antes de tiempo.
+ */
+function extraerPrimerObjeto(texto: string): string {
+  const inicio = texto.indexOf("{")
+  if (inicio === -1) return texto
+  let profundidad = 0
+  let enString = false
+  let escape = false
+  for (let i = inicio; i < texto.length; i++) {
+    const ch = texto[i]
+    if (escape) { escape = false; continue }
+    if (ch === "\\") { escape = true; continue }
+    if (ch === '"') { enString = !enString; continue }
+    if (enString) continue
+    if (ch === "{") profundidad++
+    else if (ch === "}") {
+      profundidad--
+      if (profundidad === 0) return texto.slice(inicio, i + 1)
+    }
+  }
+  return texto.slice(inicio) // sin cierre balanceado → deja que JSON.parse falle
+}
+
 async function generarConRAG(
   perfil: PerfilNegocio,
   tipoDocumento: string,
@@ -190,8 +216,12 @@ async function generarConRAG(
   tema: string,
   datosAdicionales?: Record<string, unknown>,
 ): Promise<ResultadoDocumento> {
-  // 1. Búsqueda de base legal por texto en Supabase
-  const consulta = `${nombreDoc} para ${(perfil.numero_socios ?? 1) === 1 ? "comerciante individual" : "sociedad"} en Guatemala`
+  // 1. Búsqueda de base legal por texto en Supabase.
+  // Solo el nombre del documento: websearch_to_tsquery usa semántica AND, así que
+  // añadir "para sociedad en Guatemala" exigía que un mismo artículo contuviera
+  // TODAS esas palabras → 0 resultados. El contexto del perfil va en el prompt, no
+  // en la consulta de búsqueda.
+  const consulta = nombreDoc
 
   // El cliente es untyped (no hay tipos generados de Supabase en el repo), así
   // que .rpc() no conoce las funciones RPC — casteamos los args para el RPC
@@ -259,13 +289,16 @@ Responde ÚNICAMENTE con este JSON (sin texto adicional):
     }
   }
 
-  // 4. Parsear respuesta JSON
+  // 4. Parsear respuesta JSON.
+  // deepseek-v4-pro es un modelo de razonamiento: a veces antepone cadena de
+  // pensamiento (a veces en bloques <think>...</think>) o prosa antes del JSON.
+  // Quitamos eso y los fences ```json, luego recortamos al primer objeto {...}
+  // balanceado en lugar del último "}" (que puede caer dentro del razonamiento).
   let resultado: { documento: string; campos_faltantes: string[] }
   try {
-    const limpio = raw.replace(/```json|```/g, "").trim()
-    const jsonStart = limpio.indexOf("{")
-    const jsonEnd = limpio.lastIndexOf("}")
-    resultado = JSON.parse(limpio.slice(jsonStart, jsonEnd + 1))
+    const sinThink = raw.replace(/<think>[\s\S]*?<\/think>/gi, "")
+    const limpio = sinThink.replace(/```json|```/g, "").trim()
+    resultado = JSON.parse(extraerPrimerObjeto(limpio))
   } catch {
     return { estado: "tipo_no_soportado", mensaje: "El modelo no devolvió JSON válido." }
   }
