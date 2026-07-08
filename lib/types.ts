@@ -2,6 +2,7 @@ export type Tier = "free" | "basic" | "professional" | "enterprise"
 
 export type BusinessSize = "solo" | "small" | "growing"
 export type Industry = "retail" | "food" | "services" | "tech" | "manufacturing" | "other"
+export type IngresosMensualesRango = "low" | "medium" | "high" | "very_high"
 
 export type ChecklistStatus = "pending" | "submitted" | "approved"
 
@@ -12,6 +13,27 @@ export interface BusinessProfileInput {
   size: BusinessSize
   industry: Industry
   city: string
+
+  // Extended fields for the intelligent form (Phase 1)
+  // These are persisted in business_profiles and used by analyzeBusiness()
+  // to produce more accurate legal structure + regime + permits.
+
+  /** Exact number of owners/partners. Determines legal structure options. */
+  numero_socios?: number
+  /** Partners are family or close friends → S.R.L. preferred over S.A. */
+  socios_son_familia?: boolean
+  /** Wants to attract investors or issue shares → S.A. */
+  busca_inversionistas?: boolean
+  /** Will hire employees. 3+ → mandatory IGSS employer registration. */
+  tendra_empleados?: boolean
+  /** Number of employees (approx). Null when tendra_empleados = false. */
+  numero_empleados?: number
+  /** Will sell alcoholic beverages → special permit from Gobernación. */
+  vende_alcohol?: boolean
+  /** Will have a physical location open to the public → municipal license. */
+  local_fisico?: boolean
+  /** Expected monthly revenue range — guides tax regime recommendation. */
+  ingresos_mensuales_rango?: IngresosMensualesRango
 }
 
 export interface RoadmapStep {
@@ -25,6 +47,8 @@ export interface RoadmapStep {
 
 export interface Roadmap {
   recommendedStructure: string
+  /** Recommended Guatemalan tax regime (Pequeño Contribuyente, Simplificado, Utilidades). */
+  taxRegime?: string
   rationale: string
   steps: RoadmapStep[]
 }

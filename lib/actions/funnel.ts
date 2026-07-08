@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { analyzeBusiness } from "@/lib/ai/analyze"
-import type { BusinessProfileInput, BusinessSize, Industry } from "@/lib/types"
+import type { BusinessProfileInput, BusinessSize, Industry, IngresosMensualesRango } from "@/lib/types"
 
 async function ensureSession() {
   const supabase = await createClient()
@@ -79,7 +79,20 @@ export async function submitProfile(input: BusinessProfileInput) {
     .limit(1)
     .maybeSingle()
 
-  const payload = { size: input.size, industry: input.industry, city: input.city.trim() }
+  const payload = {
+    size: input.size,
+    industry: input.industry,
+    city: input.city.trim(),
+    // Extended intelligent form fields (null-safe — may not be present in older profiles)
+    numero_socios: input.numero_socios ?? null,
+    socios_son_familia: input.socios_son_familia ?? null,
+    busca_inversionistas: input.busca_inversionistas ?? null,
+    tendra_empleados: input.tendra_empleados ?? null,
+    numero_empleados: input.numero_empleados ?? null,
+    vende_alcohol: input.vende_alcohol ?? null,
+    local_fisico: input.local_fisico ?? null,
+    ingresos_mensuales_rango: input.ingresos_mensuales_rango ?? null,
+  }
   if (existing) {
     await supabase.from("business_profiles").update(payload).eq("id", existing.id)
   } else {
@@ -109,6 +122,15 @@ export async function buildRoadmapStep() {
     size: profile.size as BusinessSize,
     industry: profile.industry as Industry,
     city: profile.city ?? "",
+    // Pass extended fields so the AI and fallback use them
+    numero_socios: profile.numero_socios ?? undefined,
+    socios_son_familia: profile.socios_son_familia ?? undefined,
+    busca_inversionistas: profile.busca_inversionistas ?? undefined,
+    tendra_empleados: profile.tendra_empleados ?? undefined,
+    numero_empleados: profile.numero_empleados ?? undefined,
+    vende_alcohol: profile.vende_alcohol ?? undefined,
+    local_fisico: profile.local_fisico ?? undefined,
+    ingresos_mensuales_rango: (profile.ingresos_mensuales_rango as IngresosMensualesRango) ?? undefined,
   })
 
   // Replace any prior roadmap for a clean rebuild.
