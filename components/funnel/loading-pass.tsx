@@ -39,7 +39,7 @@ export function LoadingPass({ title, subtitle, action, nextHref, fallbackHref }:
       .catch((e) => {
         setError(e instanceof Error ? e.message : t.common.somethingWrong)
       })
-  }, [action, nextHref, router])
+  }, [action, nextHref, router, t.common.somethingWrong])
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-8 bg-background px-6 text-center">

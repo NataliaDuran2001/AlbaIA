@@ -1,6 +1,6 @@
 "use client"
 
-import { useTransition } from "react"
+import { useCallback, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { useLocale } from "@/lib/i18n/locale-context"
 import { LOCALES, LOCALE_COOKIE, type Locale } from "@/lib/i18n"
@@ -15,12 +15,15 @@ export function LanguageSwitch({ className }: { className?: string }) {
   const router = useRouter()
   const [pending, startTransition] = useTransition()
 
-  function choose(next: Locale) {
-    if (next === locale) return
-    // Persist for a year; the root layout reads it on the next render.
-    document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`
-    startTransition(() => router.refresh())
-  }
+  const choose = useCallback(
+    (next: Locale) => {
+      if (next === locale) return
+      // Persist for a year; the root layout reads it on the next render.
+      document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`
+      startTransition(() => router.refresh())
+    },
+    [locale, router],
+  )
 
   return (
     <div
