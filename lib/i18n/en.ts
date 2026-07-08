@@ -105,11 +105,18 @@ export const en = {
     fullNamePlaceholder: "e.g. María López",
     emailPlaceholder: "you@example.com",
     errors: {
+      // Field-level (checked in the browser before submitting).
       fullName: "Please enter your full name.",
       email: "Email is required.",
-      emailInvalid: "Enter a valid email address.",
+      emailInvalid: "Enter a valid email address — for example, you@example.com.",
       password: "Password is required.",
-      passwordShort: "Password must be at least 8 characters.",
+      passwordShort: "Your password needs at least 8 characters.",
+      // Server-returned outcomes, keyed by AuthErrorCode.
+      missing_fields: "Please fill in every field to continue.",
+      password_short: "Your password needs at least 8 characters.",
+      email_taken: "An account with this email already exists. Try signing in instead.",
+      invalid_credentials: "That email or password doesn't match. Double-check and try again.",
+      server_error: "Something went wrong on our end. Please try again in a moment.",
     },
   },
   checklist: {

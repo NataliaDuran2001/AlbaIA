@@ -6,6 +6,7 @@ import { getTier } from "@/lib/data"
 import { can } from "@/lib/gating"
 import { catalogEntry } from "@/lib/ai/catalog"
 import { encrypt, encryptionAvailable } from "@/lib/crypto/encryption"
+import { failure } from "@/lib/actions/errors"
 
 /**
  * Save the captured value for a "data" checklist step. Sensitive values (DPI,
@@ -58,7 +59,7 @@ export async function saveChecklistData(itemId: string, value: string) {
     .eq("id", itemId)
     .eq("user_id", user.id)
 
-  if (error) return { ok: false, error: error.message }
+  if (error) return failure("save checklist data", error)
 
   revalidatePath("/checklist")
   revalidatePath("/status")

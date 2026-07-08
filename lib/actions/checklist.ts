@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
 import { getTier } from "@/lib/data"
 import { can } from "@/lib/gating"
+import { failure } from "@/lib/actions/errors"
 import type { ChecklistStatus } from "@/lib/types"
 
 export async function updateChecklistStatus(itemId: string, status: ChecklistStatus) {
@@ -36,7 +37,7 @@ export async function updateChecklistStatus(itemId: string, status: ChecklistSta
     .eq("id", itemId)
     .eq("user_id", user.id)
 
-  if (error) return { ok: false, error: error.message }
+  if (error) return failure("update checklist status", error)
 
   revalidatePath("/checklist")
   revalidatePath("/dashboard")

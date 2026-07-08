@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
+import { failure } from "@/lib/actions/errors"
 
 export async function uploadDocument(formData: FormData) {
   const supabase = await createClient()
@@ -22,7 +23,7 @@ export async function uploadDocument(formData: FormData) {
     upsert: false,
     contentType: file.type || "application/octet-stream",
   })
-  if (uploadError) return { ok: false, error: uploadError.message }
+  if (uploadError) return failure("upload document", uploadError)
 
   const { error: insertError } = await supabase.from("documents").insert({
     user_id: user.id,
@@ -30,7 +31,7 @@ export async function uploadDocument(formData: FormData) {
     storage_path: path,
     status: "submitted",
   })
-  if (insertError) return { ok: false, error: insertError.message }
+  if (insertError) return failure("insert document", insertError)
 
   if (checklistItemId) {
     await supabase.from("checklist_items").update({ status: "submitted" }).eq("id", checklistItemId).eq("user_id", user.id)
@@ -50,6 +51,6 @@ export async function getSignedDocumentUrl(path: string) {
   if (!user) return { ok: false, error: "Not authenticated." }
   // Storage RLS already restricts to the owner's folder; the signed URL is short-lived.
   const { data, error } = await supabase.storage.from("documents").createSignedUrl(path, 60 * 10)
-  if (error || !data) return { ok: false, error: error?.message ?? "Could not sign URL." }
+  if (error || !data) return failure("sign document url", error)
   return { ok: true, url: data.signedUrl }
 }

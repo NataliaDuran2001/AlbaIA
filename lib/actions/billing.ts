@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { getBillingProvider } from "@/lib/billing"
 import { getPlan } from "@/lib/billing/plans"
+import { failure } from "@/lib/actions/errors"
 import type { Tier } from "@/lib/types"
 
 /**
@@ -37,7 +38,7 @@ export async function confirmCheckout(tier: string) {
     },
     { onConflict: "user_id" },
   )
-  if (error) return { ok: false, error: error.message }
+  if (error) return failure("confirm checkout", error)
 
   if (plan.tier === "enterprise") {
     await admin.from("consultation_credits").delete().eq("user_id", user.id)

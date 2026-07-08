@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
 import { getTier } from "@/lib/data"
 import { can } from "@/lib/gating"
+import { failure } from "@/lib/actions/errors"
 
 type ConsultationKind = "lawyer" | "accountant"
 
@@ -35,7 +36,7 @@ export async function scheduleConsultation(kind: ConsultationKind) {
 
   const remaining = credit.remaining - 1
   const { error } = await supabase.from("consultation_credits").update({ remaining }).eq("id", credit.id)
-  if (error) return { ok: false, error: error.message }
+  if (error) return failure("schedule consultation", error)
 
   revalidatePath("/partners")
   revalidatePath("/dashboard")
