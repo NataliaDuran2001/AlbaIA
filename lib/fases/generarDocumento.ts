@@ -41,6 +41,13 @@ export interface ArticuloCitado {
   relevancia: number
 }
 
+/** Fila devuelta por el RPC `buscar_chunks_texto` (full-text en Supabase). */
+interface ChunkRegulacion {
+  titulo: string
+  texto: string
+  relevancia: number
+}
+
 export interface ResultadoDocumento {
   estado: "generado" | "faltan_datos" | "tipo_no_soportado"
   documento?: string
@@ -186,12 +193,20 @@ async function generarConRAG(
   // 1. Búsqueda de base legal por texto en Supabase
   const consulta = `${nombreDoc} para ${(perfil.numero_socios ?? 1) === 1 ? "comerciante individual" : "sociedad"} en Guatemala`
 
-  const { data: chunks, error } = await getSupabase().rpc("buscar_chunks_texto", {
+  // El cliente es untyped (no hay tipos generados de Supabase en el repo), así
+  // que .rpc() no conoce las funciones RPC — casteamos los args para el RPC
+  // full-text `buscar_chunks_texto` definido en la base de datos.
+  const rpcArgs = {
     consulta,
     pais_filtro: perfil.pais ?? "GT",
     tema_filtro: tema,
     match_count: 8,
-  })
+  }
+  const { data, error } = await getSupabase().rpc(
+    "buscar_chunks_texto",
+    rpcArgs as never,
+  )
+  const chunks = data as ChunkRegulacion[] | null
 
   if (error) {
     return {
@@ -208,7 +223,7 @@ async function generarConRAG(
   }
 
   // 2. Construir contexto legal
-  const contextoLegal = (chunks as Array<{ titulo: string; texto: string }>)
+  const contextoLegal = chunks
     .map((c) => `${c.titulo}\n${c.texto}`)
     .join("\n\n---\n\n")
 
@@ -255,7 +270,7 @@ Responde ÚNICAMENTE con este JSON (sin texto adicional):
     return { estado: "tipo_no_soportado", mensaje: "El modelo no devolvió JSON válido." }
   }
 
-  const articulos_citados: ArticuloCitado[] = (chunks as Array<{ titulo: string; relevancia: number }>).map((c) => ({
+  const articulos_citados: ArticuloCitado[] = chunks.map((c) => ({
     titulo: c.titulo,
     relevancia: c.relevancia,
   }))
