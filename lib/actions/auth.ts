@@ -19,7 +19,7 @@ export async function signUpAction(input: SignUpInput) {
   const email = input.email.trim().toLowerCase()
   const { password, fullName } = input
   if (!email || !password) return { ok: false, error: "Email and password are required." }
-  if (password.length < 6) return { ok: false, error: "Password must be at least 6 characters." }
+  if (password.length < 8) return { ok: false, error: "Password must be at least 8 characters." }
 
   const supabase = await createClient()
   const admin = createAdminClient()
@@ -27,6 +27,13 @@ export async function signUpAction(input: SignUpInput) {
   const {
     data: { user },
   } = await supabase.auth.getUser()
+
+  // Basic guard: reject if the email already belongs to a different account,
+  // returning a clean error instead of leaning on the admin API to fail.
+  const { data: existingProfile } = await admin.from("profiles").select("id").eq("email", email).maybeSingle()
+  if (existingProfile && existingProfile.id !== user?.id) {
+    return { ok: false, error: "An account with this email already exists. Please sign in instead." }
+  }
 
   if (user && user.is_anonymous) {
     // Promote the anonymous guest to a permanent account (same uid).
@@ -50,6 +57,27 @@ export async function signUpAction(input: SignUpInput) {
     if (error || !data.user) return { ok: false, error: error?.message ?? "Could not create account." }
     await admin.from("profiles").update({ email, full_name: fullName }).eq("id", data.user.id)
   }
+
+  return { ok: true }
+}
+
+interface SignInInput {
+  email: string
+  password: string
+}
+
+/**
+ * Sign in an existing account with email + password against the server client,
+ * mirroring signUpAction's { ok, error } contract.
+ */
+export async function signInAction(input: SignInInput) {
+  const email = input.email.trim().toLowerCase()
+  const { password } = input
+  if (!email || !password) return { ok: false, error: "Email and password are required." }
+
+  const supabase = await createClient()
+  const { error } = await supabase.auth.signInWithPassword({ email, password })
+  if (error) return { ok: false, error: error.message }
 
   return { ok: true }
 }

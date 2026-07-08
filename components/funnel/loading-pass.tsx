@@ -21,12 +21,13 @@ export function LoadingPass({ title, subtitle, action, nextHref, fallbackHref }:
   const started = useRef(false)
 
   useEffect(() => {
+    // Guard against the double-invoke of Strict Mode (dev): only fire once.
+    // We intentionally do NOT cancel on cleanup — cancelling would discard the
+    // in-flight result of the first run and leave the screen spinning forever.
     if (started.current) return
     started.current = true
-    let active = true
     action()
       .then((res) => {
-        if (!active) return
         if (res.ok) {
           router.replace(nextHref)
         } else {
@@ -34,11 +35,8 @@ export function LoadingPass({ title, subtitle, action, nextHref, fallbackHref }:
         }
       })
       .catch((e) => {
-        if (active) setError(e instanceof Error ? e.message : "Unexpected error.")
+        setError(e instanceof Error ? e.message : "Unexpected error.")
       })
-    return () => {
-      active = false
-    }
   }, [action, nextHref, router])
 
   return (

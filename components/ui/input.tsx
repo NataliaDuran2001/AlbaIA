@@ -10,6 +10,7 @@ export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttribute
         "flex h-11 w-full rounded-[4px] border border-input bg-card px-3 text-sm text-foreground",
         "placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/30",
         "disabled:cursor-not-allowed disabled:opacity-50",
+        "aria-[invalid=true]:border-destructive aria-[invalid=true]:focus-visible:border-destructive aria-[invalid=true]:focus-visible:ring-destructive/30",
         className,
       )}
       {...props}

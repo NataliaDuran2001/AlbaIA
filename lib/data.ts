@@ -75,3 +75,20 @@ export async function getConsultationCredits(userId: string): Promise<Consultati
   const { data } = await supabase.from("consultation_credits").select("*").eq("user_id", userId)
   return (data as ConsultationCredit[]) ?? []
 }
+
+// Static catalog of verified partners shown in /partners. Swap for a DB-backed
+// table when real partners are onboarded.
+export interface Partner {
+  id: string
+  name: string
+  kind: "lawyer" | "accountant"
+  specialty: string
+  city: string
+}
+
+export const PARTNERS: Partner[] = [
+  { id: "p-alvarez", name: "Lic. Ana Álvarez", kind: "lawyer", specialty: "Company incorporation & commercial law", city: "Guatemala City" },
+  { id: "p-morales", name: "Lic. Diego Morales", kind: "lawyer", specialty: "Notarial deeds & registry filings", city: "Quetzaltenango" },
+  { id: "p-castillo", name: "CPA Sofía Castillo", kind: "accountant", specialty: "SAT enrollment & tax regime setup", city: "Guatemala City" },
+  { id: "p-recinos", name: "CPA Luis Recinos", kind: "accountant", specialty: "Bookkeeping & monthly declarations", city: "Antigua" },
+]

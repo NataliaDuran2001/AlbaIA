@@ -14,22 +14,22 @@ export default function LandingPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex min-h-[100svh] flex-col bg-background">
       <MarketingHeader />
-      <main className="mx-auto w-full max-w-[1280px] px-6 py-12 lg:px-16 lg:py-20">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div className="flex flex-col gap-6">
+      <main className="mx-auto flex w-full max-w-[1280px] flex-1 items-center px-6 py-6 lg:px-16">
+        <div className="grid w-full items-center gap-8 lg:grid-cols-2 lg:gap-12">
+          <div className="flex flex-col gap-3">
             <span className="label-caps">{t.landing.eyebrow}</span>
-            <h1 className="text-4xl font-semibold leading-[1.1] tracking-tight text-balance lg:text-5xl">
+            <h1 className="text-3xl font-semibold leading-[1.1] tracking-tight text-balance lg:text-4xl">
               {t.landing.title}
             </h1>
-            <p className="max-w-xl text-lg leading-relaxed text-muted-foreground text-pretty">{t.landing.subtitle}</p>
+            <p className="max-w-xl leading-relaxed text-muted-foreground text-pretty">{t.landing.subtitle}</p>
 
-            <div className="mt-2 rounded-[8px] border border-border bg-card p-5 shadow-card-hover">
+            <div className="mt-1 rounded-[8px] border border-border bg-card p-4 shadow-card-hover">
               <IdeaForm />
             </div>
 
-            <ul className="mt-2 flex flex-wrap gap-x-6 gap-y-3">
+            <ul className="mt-1 flex flex-wrap gap-x-6 gap-y-2">
               {trust.map(({ icon: Icon, label }) => (
                 <li key={label} className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Icon className="h-4 w-4 text-primary" aria-hidden="true" />
@@ -39,9 +39,9 @@ export default function LandingPage() {
             </ul>
           </div>
 
-          <div className="relative aspect-[4/3] overflow-hidden rounded-[8px] border border-border bg-panel">
+          <div className="relative hidden aspect-[4/3] max-h-[70vh] w-full overflow-hidden rounded-[8px] border border-border bg-panel lg:block">
             <Image
-              src="/hero-entrepreneur.png"
+              src="/hero-entrepreneur.webp"
               alt="A small business owner standing confidently in their shop"
               fill
               priority

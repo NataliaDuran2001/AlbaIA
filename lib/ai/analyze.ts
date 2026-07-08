@@ -19,7 +19,7 @@ export async function analyzeBusiness(description: string, profile: BusinessProf
 }
 
 function recommendStructure(profile: BusinessProfileInput): string {
-  if (profile.size === "solo") return "Sole Proprietor (Empresa Individual)"
+  if (profile.size === "solo") return "Sole Proprietor"
   if (profile.size === "small") return "Limited Liability Company (Sociedad de Responsabilidad Limitada)"
   return "Stock Corporation (Sociedad Anónima)"
 }

@@ -1,8 +1,10 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
-// Routes that require a real (non-anonymous) authenticated user.
-const PROTECTED_PREFIXES = ["/checklist", "/pricing", "/checkout", "/partners", "/finalize", "/complete", "/dashboard"]
+// Routes that require any session — anonymous (guest) or real.
+const SESSION_REQUIRED = ["/checklist", "/pricing", "/checkout", "/partners", "/finalize", "/complete"]
+// Routes that require a real (non-anonymous) authenticated account.
+const REAL_USER_REQUIRED = ["/dashboard"]
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
@@ -29,13 +31,18 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   const pathname = request.nextUrl.pathname
-  const isProtected = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p))
   const isAnonymous = user?.is_anonymous ?? false
+  const needsSession = SESSION_REQUIRED.some((p) => pathname.startsWith(p))
+  const needsRealUser = REAL_USER_REQUIRED.some((p) => pathname.startsWith(p))
 
-  // Protected app routes require a permanent account (not anonymous, not logged out).
-  if (isProtected && (!user || isAnonymous)) {
+  // /dashboard requires a permanent account; the funnel routes accept a guest
+  // (anonymous) session too. Anything requiring at least a session redirects to
+  // /login when there is none.
+  const denied = needsRealUser ? !user || isAnonymous : needsSession && !user
+
+  if (denied) {
     const url = request.nextUrl.clone()
-    url.pathname = "/signup"
+    url.pathname = "/login"
     url.searchParams.set("next", pathname)
     return NextResponse.redirect(url)
   }

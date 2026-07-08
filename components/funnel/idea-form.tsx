@@ -38,7 +38,7 @@ export function IdeaForm() {
           value={idea}
           onChange={(e) => setIdea(e.target.value)}
           placeholder={t.landing.inputPlaceholder}
-          className="min-h-32 bg-card"
+          className="min-h-24 bg-card"
           aria-describedby={error ? "idea-error" : undefined}
         />
         {error && (
