@@ -2,9 +2,34 @@ import { Brand } from "@/components/brand"
 import { LanguageSwitch } from "@/components/language-switch"
 import { ProfileForm } from "@/components/funnel/profile-form"
 import { getT } from "@/lib/i18n/server"
+import { createClient } from "@/lib/supabase/server"
+import { extractFromIdea } from "@/lib/ai/extract"
 
 export default async function ProfilePage() {
   const t = await getT()
+
+  // Best-effort: fetch the user's idea_text and pre-fill the form via AI extraction.
+  // If anything fails (no session, no idea_text, AI unavailable) we just pass an
+  // empty prefilled object — the form works exactly as before.
+  let prefilled = { detected: [] as string[] }
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      const { data: profile } = await supabase
+        .from("business_profiles")
+        .select("idea_text")
+        .eq("user_id", user.id)
+        .limit(1)
+        .maybeSingle()
+
+      if (profile?.idea_text) {
+        prefilled = await extractFromIdea(profile.idea_text)
+      }
+    }
+  } catch {
+    // Silently ignore — form renders without pre-fill
+  }
 
   return (
     <main className="relative flex min-h-[100svh] flex-col items-center justify-center px-6 py-8">
@@ -17,7 +42,7 @@ export default async function ProfilePage() {
           <p className="text-muted-foreground text-pretty">{t.profile.subtitle}</p>
         </div>
         <div className="mt-8 rounded-[8px] border border-border bg-card p-6 shadow-card-hover">
-          <ProfileForm />
+          <ProfileForm prefilled={prefilled} />
         </div>
       </div>
     </main>
