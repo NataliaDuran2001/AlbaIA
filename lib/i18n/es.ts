@@ -4,7 +4,7 @@ import type { Dictionary } from "./index"
 // exact key parity with the English dictionary in en.ts.
 export const es: Dictionary = {
   common: {
-    appName: "AlbaIA",
+    appName: "Alba AI",
     continue: "Continuar",
     back: "Atrás",
     next: "Siguiente",
@@ -31,10 +31,10 @@ export const es: Dictionary = {
     eyebrow: "Formalización de negocios, guiada por IA",
     title: "Formaliza tu negocio en Guatemala, de forma inteligente",
     subtitle:
-      "Describe tu idea y AlbaIA traza la estructura legal, los permisos y los pasos exactos que necesitas — y te guía hasta tener un negocio registrado.",
+      "Describe tu idea y Alba AI traza la estructura legal, los permisos y los pasos exactos que necesitas — y te guía hasta tener un negocio registrado.",
     inputLabel: "Describe tu idea de negocio",
     inputPlaceholder: "ej. Una pequeña panadería en Ciudad de Guatemala que vende pasteles personalizados y café…",
-    cta: "Analizar con AlbaIA",
+    cta: "Analizar con Alba AI",
     trustA: "Estructura legal recomendada",
     trustB: "Hoja de ruta paso a paso",
     trustC: "Aliados locales verificados",
@@ -42,14 +42,14 @@ export const es: Dictionary = {
   },
   analyzing: {
     pass1Title: "Analizando tu idea",
-    pass1Subtitle: "AlbaIA está revisando la descripción de tu negocio…",
+    pass1Subtitle: "Alba AI está revisando la descripción de tu negocio…",
     pass2Title: "Construyendo tu hoja de ruta",
     pass2Subtitle: "Reuniendo los pasos exactos para tu negocio…",
   },
   profile: {
     step: "Paso 2 de 3",
     title: "Cuéntanos sobre tu negocio",
-    subtitle: "Unos pocos datos ayudan a AlbaIA a recomendar la estructura correcta.",
+    subtitle: "Unos pocos datos ayudan a Alba AI a recomendar la estructura correcta.",
     sizeLabel: "Tamaño del negocio",
     sizeSolo: "Solo yo",
     sizeSmall: "2–10 personas",
@@ -76,7 +76,7 @@ export const es: Dictionary = {
   },
   roadmap: {
     eyebrow: "Estructura recomendada",
-    supporting: "Esta es la ruta exacta que AlbaIA trazó para tu negocio.",
+    supporting: "Esta es la ruta exacta que Alba AI trazó para tu negocio.",
     whyTitle: "Por qué esta estructura",
     previewTitle: "Tu hoja de ruta de formalización",
     saveCta: "Iniciar el proceso",
@@ -301,8 +301,8 @@ export const es: Dictionary = {
   },
   support: {
     title: "Soporte",
-    subtitle: "Recibe ayuda con tu formalización — de AlbaIA y de profesionales verificados.",
-    specialistTitle: "Habla con un especialista de AlbaIA",
+    subtitle: "Recibe ayuda con tu formalización — de Alba AI y de profesionales verificados.",
+    specialistTitle: "Habla con un especialista de Alba AI",
     specialistBody: "Recibe orientación personalizada de nuestro equipo de formalización cuando la necesites.",
     specialistAvailable: "Incluido en tu plan — escríbenos cuando quieras.",
     specialistLocked: "Disponible desde",
@@ -318,7 +318,7 @@ export const es: Dictionary = {
     handbookCta: "Abrir el manual",
   },
   assistant: {
-    title: "Asistente de AlbaIA",
+    title: "Asistente de Alba AI",
     subtitle: "Aquí para ayudarte con tu proceso",
     open: "Abrir el asistente",
     close: "Cerrar el asistente",
@@ -326,7 +326,7 @@ export const es: Dictionary = {
     placeholder: "Pregunta sobre un paso o el proceso…",
     thinking: "Pensando…",
     greeting:
-      "¡Hola! Soy el asistente de AlbaIA. Pregúntame lo que quieras sobre tus pasos de formalización, qué subir o cómo usar la app.",
+      "¡Hola! Soy el asistente de Alba AI. Pregúntame lo que quieras sobre tus pasos de formalización, qué subir o cómo usar la app.",
   },
   handbook: {
     eyebrow: "Manual",
@@ -338,12 +338,12 @@ export const es: Dictionary = {
     sections: [
       {
         heading: "Describe tu negocio",
-        body: "Empiezas contándole a AlbaIA qué hace tu negocio. A partir de tu descripción y unos datos (tamaño, industria, ubicación), AlbaIA recomienda la estructura legal adecuada.",
+        body: "Empiezas contándole a Alba AI qué hace tu negocio. A partir de tu descripción y unos datos (tamaño, industria, ubicación), Alba AI recomienda la estructura legal adecuada.",
         points: ["No necesitas tecnicismos — descríbelo con tus propias palabras.", "Obtienes una estructura recomendada y el razonamiento detrás."],
       },
       {
         heading: "Sigue tu hoja de ruta",
-        body: "AlbaIA convierte la recomendación en una lista paso a paso a la medida de tu negocio. Algunos pasos te piden ingresar un dato; otros, subir un documento.",
+        body: "Alba AI convierte la recomendación en una lista paso a paso a la medida de tu negocio. Algunos pasos te piden ingresar un dato; otros, subir un documento.",
         points: ["Pasos de datos: tu DPI, NIT, dirección o régimen fiscal.", "Pasos de documentos: escritura notariada, inscripción en el registro mercantil, licencia sanitaria."],
       },
       {
@@ -353,7 +353,7 @@ export const es: Dictionary = {
       },
       {
         heading: "Obtén ayuda experta cuando la necesites",
-        body: "Según tu plan, puedes hablar con un especialista de AlbaIA o agendar consultas con abogados y contadores verificados desde el Catálogo.",
+        body: "Según tu plan, puedes hablar con un especialista de Alba AI o agendar consultas con abogados y contadores verificados desde el Catálogo.",
         points: ["El soporte de especialista y el agendamiento con aliados se desbloquean con planes superiores.", "La burbuja del asistente siempre está disponible para dudas rápidas."],
       },
       {
@@ -367,7 +367,7 @@ export const es: Dictionary = {
     eyebrow: "Privacidad",
     title: "Política de privacidad",
     intro:
-      "Esta política explica qué datos recopila AlbaIA, cómo los usamos y cómo los protegemos mientras te guiamos en la formalización.",
+      "Esta política explica qué datos recopila Alba AI, cómo los usamos y cómo los protegemos mientras te guiamos en la formalización.",
     encryptionTitle: "Tus datos sensibles están cifrados",
     encryptionBody:
       "La información sensible como tu DPI, tu NIT y la dirección de tu negocio se cifra en reposo con AES-256-GCM. Se almacena cifrada y se te muestra enmascarada.",

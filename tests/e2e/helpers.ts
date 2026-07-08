@@ -6,7 +6,7 @@ export async function completeGuestToRoadmap(page: Page) {
   await page.getByLabel("Describe your business idea").fill(
     "A small bakery in Guatemala City selling custom cakes and coffee.",
   )
-  await page.getByRole("button", { name: /Analyze with AlbaIA/i }).click()
+  await page.getByRole("button", { name: /Analyze with Alba AI/i }).click()
 
   await page.waitForURL("**/profile", { timeout: 30_000 })
   await page.getByRole("radio", { name: "Just me" }).check()

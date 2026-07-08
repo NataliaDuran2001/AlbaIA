@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useRef, useState, useTransition } from "react"
-import { MessageCircle, Send, Sparkles, X } from "lucide-react"
+import Image from "next/image"
+import { MessageCircle, Send, X } from "lucide-react"
 import { askAssistant, type AssistantMessage } from "@/lib/actions/assistant"
 import { Button } from "@/components/ui/button"
 import { useT } from "@/lib/i18n/use-t"
@@ -55,7 +56,7 @@ export function ChatBubble() {
           {/* Header */}
           <div className="flex items-center gap-2 border-b border-border bg-panel px-4 py-3">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
-              <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
+              <Image src="/brand-mark.png" alt="" aria-hidden="true" width={20} height={20} className="h-5 w-5" />
             </span>
             <div className="flex flex-col">
               <span className="text-sm font-semibold text-foreground">{t.assistant.title}</span>

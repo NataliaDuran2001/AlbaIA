@@ -2,7 +2,7 @@
 // added later without touching components. Access via useT() / getDictionary().
 export const en = {
   common: {
-    appName: "AlbaIA",
+    appName: "Alba AI",
     continue: "Continue",
     back: "Back",
     next: "Next",
@@ -29,10 +29,10 @@ export const en = {
     eyebrow: "Business formalization, guided by AI",
     title: "Formalize your business in Guatemala, the smart way",
     subtitle:
-      "Describe your idea and AlbaIA maps the exact legal structure, permits, and steps you need — then guides you all the way to a registered business.",
+      "Describe your idea and Alba AI maps the exact legal structure, permits, and steps you need — then guides you all the way to a registered business.",
     inputLabel: "Describe your business idea",
     inputPlaceholder: "e.g. A small bakery in Guatemala City selling custom cakes and coffee…",
-    cta: "Analyze with AlbaIA",
+    cta: "Analyze with Alba AI",
     trustA: "Recommended legal structure",
     trustB: "Step-by-step roadmap",
     trustC: "Verified local partners",
@@ -40,14 +40,14 @@ export const en = {
   },
   analyzing: {
     pass1Title: "Analyzing your idea",
-    pass1Subtitle: "AlbaIA is reviewing your business description…",
+    pass1Subtitle: "Alba AI is reviewing your business description…",
     pass2Title: "Building your roadmap",
     pass2Subtitle: "Assembling the exact steps for your business…",
   },
   profile: {
     step: "Step 2 of 3",
     title: "Tell us about your business",
-    subtitle: "A few details help AlbaIA recommend the right structure.",
+    subtitle: "A few details help Alba AI recommend the right structure.",
     sizeLabel: "Business size",
     sizeSolo: "Just me",
     sizeSmall: "2–10 people",
@@ -74,7 +74,7 @@ export const en = {
   },
   roadmap: {
     eyebrow: "Recommended structure",
-    supporting: "Here's the exact path AlbaIA mapped for your business.",
+    supporting: "Here's the exact path Alba AI mapped for your business.",
     whyTitle: "Why this structure",
     previewTitle: "Your formalization roadmap",
     saveCta: "Start the process",
@@ -293,8 +293,8 @@ export const en = {
   },
   support: {
     title: "Support",
-    subtitle: "Get help with your formalization — from AlbaIA and from verified professionals.",
-    specialistTitle: "Talk to an AlbaIA specialist",
+    subtitle: "Get help with your formalization — from Alba AI and from verified professionals.",
+    specialistTitle: "Talk to an Alba AI specialist",
     specialistBody: "Get one-on-one guidance from our formalization team when you need it.",
     specialistAvailable: "Included in your plan — reach out anytime.",
     specialistLocked: "Available from",
@@ -310,7 +310,7 @@ export const en = {
     handbookCta: "Open the handbook",
   },
   assistant: {
-    title: "AlbaIA assistant",
+    title: "Alba AI assistant",
     subtitle: "Here to help with your process",
     open: "Open the assistant",
     close: "Close the assistant",
@@ -318,7 +318,7 @@ export const en = {
     placeholder: "Ask about a step or the process…",
     thinking: "Thinking…",
     greeting:
-      "Hi! I'm the AlbaIA assistant. Ask me anything about your formalization steps, what to upload, or how to use the app.",
+      "Hi! I'm the Alba AI assistant. Ask me anything about your formalization steps, what to upload, or how to use the app.",
   },
   handbook: {
     eyebrow: "Handbook",
@@ -330,12 +330,12 @@ export const en = {
     sections: [
       {
         heading: "Describe your business",
-        body: "You start by telling AlbaIA what your business does. From your description and a few details (size, industry, location), AlbaIA recommends the right legal structure.",
+        body: "You start by telling Alba AI what your business does. From your description and a few details (size, industry, location), Alba AI recommends the right legal structure.",
         points: ["No jargon required — describe it in your own words.", "You get a recommended structure and the reasoning behind it."],
       },
       {
         heading: "Follow your roadmap",
-        body: "AlbaIA turns the recommendation into a step-by-step checklist tailored to your business. Some steps ask you to enter a value; others ask you to upload a document.",
+        body: "Alba AI turns the recommendation into a step-by-step checklist tailored to your business. Some steps ask you to enter a value; others ask you to upload a document.",
         points: ["Data steps: your DPI, NIT, address, or tax regime.", "Document steps: notarized deed, commercial registry filing, sanitary license."],
       },
       {
@@ -345,7 +345,7 @@ export const en = {
       },
       {
         heading: "Get expert help when you need it",
-        body: "Depending on your plan, you can talk to an AlbaIA specialist or schedule consultations with verified lawyers and accountants from the Catalog.",
+        body: "Depending on your plan, you can talk to an Alba AI specialist or schedule consultations with verified lawyers and accountants from the Catalog.",
         points: ["Specialist support and partner scheduling unlock with higher plans.", "The assistant bubble is always available for quick questions."],
       },
       {
@@ -359,7 +359,7 @@ export const en = {
     eyebrow: "Privacy",
     title: "Privacy Policy",
     intro:
-      "This policy explains what data AlbaIA collects, how we use it, and how we protect it while guiding you through formalization.",
+      "This policy explains what data Alba AI collects, how we use it, and how we protect it while guiding you through formalization.",
     encryptionTitle: "Your sensitive data is encrypted",
     encryptionBody:
       "Sensitive information such as your DPI (national ID), NIT (tax ID), and business address is encrypted at rest using AES-256-GCM. It is stored in encrypted form and shown back to you masked.",

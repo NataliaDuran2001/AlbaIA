@@ -22,7 +22,7 @@ test("landing has no serious a11y violations and a ≥44px CTA", async ({ page }
   await page.goto("/")
   await assertNoSeriousViolations(page)
 
-  const cta = page.getByRole("button", { name: /Analyze with AlbaIA/i })
+  const cta = page.getByRole("button", { name: /Analyze with Alba AI/i })
   const box = await cta.boundingBox()
   expect(box?.height ?? 0).toBeGreaterThanOrEqual(44)
 })

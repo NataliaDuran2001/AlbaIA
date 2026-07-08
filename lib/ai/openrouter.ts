@@ -3,7 +3,7 @@ import "server-only"
 /**
  * Cliente de IA genérico (API compatible con OpenAI) vía fetch.
  *
- * Un único punto de acceso para las dos funciones de IA de AlbaIA (el asistente
+ * Un único punto de acceso para las dos funciones de IA de Alba AI (el asistente
  * in-app y el análisis de roadmap). Server-side only: la key nunca llega al
  * cliente. Si no hay key configurada, `available()` devuelve false y cada
  * llamador cae a su fallback determinista.

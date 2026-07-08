@@ -32,7 +32,7 @@ export default async function SupportPage() {
         </div>
 
         <div className="mt-8 flex flex-col gap-4">
-          {/* AlbaIA specialist support */}
+          {/* Alba AI specialist support */}
           <section className="flex flex-col gap-4 rounded-[8px] border border-border bg-card p-5">
             <div className="flex items-start gap-3">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent">

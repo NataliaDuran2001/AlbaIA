@@ -15,9 +15,9 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'AlbaIA — Formalize your business in Guatemala',
+  title: 'Alba AI — Formalize your business in Guatemala',
   description:
-    'AlbaIA is your AI guide to formalizing a business in Guatemala. Analyze your idea, get a recommended legal structure, and follow a step-by-step roadmap to completion.',
+    'Alba AI is your AI guide to formalizing a business in Guatemala. Analyze your idea, get a recommended legal structure, and follow a step-by-step roadmap to completion.',
   generator: 'v0.app',
 }
 

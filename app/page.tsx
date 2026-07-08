@@ -50,6 +50,10 @@ export default async function LandingPage() {
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 600px"
             />
+            <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-[8px] border border-border/60 bg-card/95 px-3 py-2 shadow-card-hover backdrop-blur-sm">
+              <Image src="/brand-mark.png" alt="" aria-hidden="true" width={28} height={28} className="h-7 w-7" />
+              <span className="text-sm font-semibold text-foreground">Alba AI</span>
+            </div>
           </div>
         </div>
       </main>
