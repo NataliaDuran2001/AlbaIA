@@ -7,6 +7,7 @@ import { signInAction, signUpAction } from "@/lib/actions/auth"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { PasswordInput } from "@/components/ui/password-input"
 import { useT } from "@/lib/i18n/use-t"
 
 export function AuthForm({ mode }: { mode: "signup" | "login" }) {
@@ -96,12 +97,13 @@ export function AuthForm({ mode }: { mode: "signup" | "login" }) {
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="password">{t.auth.password}</Label>
-        <Input
+        <PasswordInput
           id="password"
-          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete={isSignup ? "new-password" : "current-password"}
+          showLabel={t.auth.showPassword}
+          hideLabel={t.auth.hidePassword}
           aria-invalid={!!errors.password}
           aria-describedby={errors.password ? "password-err" : isSignup ? "password-hint" : undefined}
         />

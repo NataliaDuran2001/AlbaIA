@@ -1,6 +1,5 @@
 import Link from "next/link"
 import { Check } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { PLANS } from "@/lib/billing/plans"
 import { getT } from "@/lib/i18n/server"
@@ -21,15 +20,9 @@ export default async function PricingPage() {
           <div
             key={plan.tier}
             className={cn(
-              "relative flex flex-col rounded-[8px] border bg-card p-6 transition-shadow hover:shadow-card-hover",
-              plan.popular ? "border-primary shadow-card-hover" : "border-border",
+              "relative flex flex-col rounded-[8px] border border-border bg-card p-6 transition-shadow hover:shadow-card-hover",
             )}
           >
-            {plan.popular && (
-              <Badge variant="primary" className="absolute -top-3 left-6">
-                {t.pricing.mostPopular}
-              </Badge>
-            )}
             <h2 className="text-xl font-semibold text-foreground">{plan.name}</h2>
             <div className="mt-3 flex items-baseline gap-1">
               <span className="text-4xl font-semibold tracking-tight text-foreground">${plan.price}</span>
@@ -53,15 +46,6 @@ export default async function PricingPage() {
             </Link>
           </div>
         ))}
-      </div>
-
-      <div className="mt-10 text-center">
-        <Link
-          href="/checklist"
-          className="text-sm font-medium text-muted-foreground underline underline-offset-4 hover:text-foreground"
-        >
-          {t.pricing.maybeLater}
-        </Link>
       </div>
     </main>
   )

@@ -17,6 +17,7 @@ export function AppHeaderClient({ country }: { country: string | null }) {
     { href: "/checklist", label: t.nav.process },
     { href: "/status", label: t.nav.status },
     { href: "/documents", label: t.nav.documents },
+    { href: "/partners", label: t.nav.catalog },
     { href: "/support", label: t.nav.support },
   ]
 

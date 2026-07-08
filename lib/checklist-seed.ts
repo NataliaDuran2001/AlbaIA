@@ -21,14 +21,26 @@ export async function seedChecklistIfEmpty(supabase: SupabaseClient, userId: str
   const steps = (roadmap?.steps as RoadmapStep[] | undefined) ?? []
   if (steps.length === 0) return
 
-  const rows = steps.map((s, i) => ({
-    user_id: userId,
-    key: s.key,
-    title: s.label,
-    status: "pending",
-    premium: s.premium,
-    sort_order: i,
-  }))
+  // Defense in depth against duplicate steps (see stepsFromKeys): collapse any
+  // repeated keys before seeding so the checklist never shows the same step twice.
+  const seen = new Set<string>()
+  const rows = steps
+    .filter((s) => {
+      if (seen.has(s.key)) return false
+      seen.add(s.key)
+      return true
+    })
+    .map((s, i) => ({
+      user_id: userId,
+      key: s.key,
+      title: s.label,
+      status: "pending",
+      premium: s.premium,
+      // Persist how the step is completed so the checklist renders an input or
+      // an upload control. Falls back to "upload" for legacy roadmaps without it.
+      input_kind: s.inputKind ?? "upload",
+      sort_order: i,
+    }))
 
   await supabase.from("checklist_items").insert(rows)
 }

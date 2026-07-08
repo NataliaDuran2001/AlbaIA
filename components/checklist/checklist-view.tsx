@@ -3,11 +3,13 @@
 import { useRef, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { ArrowRight, CheckCircle2, Lock, Upload } from "lucide-react"
+import { ArrowRight, Check, Lock, PencilLine, Upload } from "lucide-react"
 import { uploadDocument } from "@/lib/actions/documents"
+import { saveChecklistData } from "@/lib/actions/checklist-data"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Dialog } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
 import { Progress } from "@/components/ui/progress"
 import { useT } from "@/lib/i18n/use-t"
 import { can, requiredTierFor, tierLabel } from "@/lib/gating"
@@ -29,6 +31,41 @@ export function ChecklistView({ items: initialItems, tier }: { items: ChecklistI
   const [, startTransition] = useTransition()
   const inputRef = useRef<HTMLInputElement>(null)
   const pendingUpload = useRef<string | null>(null)
+
+  // Which "data" step is being edited, and the in-progress value + error.
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [draft, setDraft] = useState("")
+  const [savingId, setSavingId] = useState<string | null>(null)
+  const [dataError, setDataError] = useState<string | null>(null)
+
+  function startEdit(itemId: string) {
+    setDataError(null)
+    setDraft("")
+    setEditingId(itemId)
+  }
+
+  function saveData(itemId: string) {
+    const value = draft.trim()
+    if (!value) {
+      setDataError(t.checklist.dataRequired)
+      return
+    }
+    setSavingId(itemId)
+    setDataError(null)
+    startTransition(async () => {
+      const res = await saveChecklistData(itemId, value)
+      setSavingId(null)
+      if (!res.ok) {
+        setDataError(res.error ?? t.common.somethingWrong)
+        return
+      }
+      setItems((prev) =>
+        prev.map((it) => (it.id === itemId ? { ...it, status: "submitted", hasData: true } : it)),
+      )
+      setEditingId(null)
+      setDraft("")
+    })
+  }
 
   const hasFullAccess = can(tier, "checklist_full")
   const unlockTier = tierLabel(requiredTierFor("checklist_full"))
@@ -94,58 +131,141 @@ export function ChecklistView({ items: initialItems, tier }: { items: ChecklistI
         {items.map((item) => {
           const locked = item.premium && !hasFullAccess
           const isUploading = uploadingId === item.id
+          const isData = item.inputKind === "data"
+          const isEditing = editingId === item.id
+          const isSaving = savingId === item.id
+          // A data step counts as actionable when pending; once submitted it can be edited.
+          const showDataForm = isData && !locked && isEditing
+
           return (
             <li
               key={item.id}
               className={cn(
-                "flex flex-col gap-3 rounded-[8px] border border-border bg-card p-4 transition-shadow hover:shadow-card-hover sm:flex-row sm:items-center sm:justify-between",
+                "flex flex-col gap-3 rounded-[8px] border border-border bg-card p-4 transition-shadow hover:shadow-card-hover",
                 locked && "opacity-75",
               )}
             >
-              <div className="flex min-w-0 flex-col gap-0.5">
-                <div className="flex items-center gap-2">
-                  {locked && <Lock className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />}
-                  <h3 className="font-medium text-foreground">{item.title}</h3>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex min-w-0 flex-col gap-0.5">
+                  <div className="flex items-center gap-2">
+                    {locked && <Lock className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />}
+                    <h3 className="font-medium text-foreground">{item.title}</h3>
+                  </div>
+                  {locked ? (
+                    <p className="text-xs text-muted-foreground">
+                      {t.checklist.unlocksWith} {unlockTier}
+                    </p>
+                  ) : (
+                    isData && (
+                      <p className="text-xs text-muted-foreground">
+                        {item.hasData ? t.checklist.dataSaved : t.checklist.dataNeeded}
+                      </p>
+                    )
+                  )}
                 </div>
-                {locked && (
-                  <p className="text-xs text-muted-foreground">
-                    {t.checklist.unlocksWith} {unlockTier}
-                  </p>
-                )}
+
+                <div className="flex shrink-0 items-center gap-3">
+                  {locked ? (
+                    <>
+                      <Badge variant="premium">{t.roadmap.premiumBadge}</Badge>
+                      <Button variant="outline" size="sm" onClick={() => setModalOpen(true)}>
+                        {isData ? (
+                          <PencilLine className="h-4 w-4" aria-hidden="true" />
+                        ) : (
+                          <Upload className="h-4 w-4" aria-hidden="true" />
+                        )}
+                        {isData ? t.checklist.enter : t.checklist.upload}
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Badge variant={statusVariant(item.status)}>{statusLabel[item.status]}</Badge>
+                      {isData ? (
+                        !isEditing && (
+                          <Button variant="outline" size="sm" onClick={() => startEdit(item.id)}>
+                            <PencilLine className="h-4 w-4" aria-hidden="true" />
+                            {item.hasData ? t.checklist.edit : t.checklist.enter}
+                          </Button>
+                        )
+                      ) : (
+                        item.status === "pending" && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={isUploading}
+                            onClick={() => triggerUpload(item.id)}
+                          >
+                            {isUploading ? (
+                              t.common.loading
+                            ) : (
+                              <>
+                                <Upload className="h-4 w-4" aria-hidden="true" />
+                                {t.checklist.upload}
+                              </>
+                            )}
+                          </Button>
+                        )
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
 
-              <div className="flex shrink-0 items-center gap-3">
-                {locked ? (
-                  <>
-                    <Badge variant="premium">{t.roadmap.premiumBadge}</Badge>
-                    <Button variant="outline" size="sm" onClick={() => setModalOpen(true)}>
-                      <Upload className="h-4 w-4" aria-hidden="true" />
-                      {t.checklist.upload}
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Badge variant={statusVariant(item.status)}>{statusLabel[item.status]}</Badge>
-                    {item.status === "pending" && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={isUploading}
-                        onClick={() => triggerUpload(item.id)}
-                      >
-                        {isUploading ? (
+              {showDataForm && (
+                <form
+                  className="flex flex-col gap-2 border-t border-border pt-3"
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    saveData(item.id)
+                  }}
+                >
+                  <label htmlFor={`data-${item.id}`} className="text-sm font-medium text-foreground">
+                    {item.dataLabel ?? item.title}
+                  </label>
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <Input
+                      id={`data-${item.id}`}
+                      autoFocus
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      placeholder={item.dataPlaceholder}
+                      aria-invalid={!!dataError}
+                    />
+                    <div className="flex gap-2">
+                      <Button type="submit" size="sm" disabled={isSaving}>
+                        {isSaving ? (
                           t.common.loading
                         ) : (
                           <>
-                            <Upload className="h-4 w-4" aria-hidden="true" />
-                            {t.checklist.upload}
+                            <Check className="h-4 w-4" aria-hidden="true" />
+                            {t.common.save}
                           </>
                         )}
                       </Button>
-                    )}
-                  </>
-                )}
-              </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setEditingId(null)
+                          setDataError(null)
+                        }}
+                      >
+                        {t.common.cancel}
+                      </Button>
+                    </div>
+                  </div>
+                  {dataError && (
+                    <p className="text-sm text-destructive" role="alert">
+                      {dataError}
+                    </p>
+                  )}
+                  <p className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <Lock className="h-3 w-3" aria-hidden="true" />
+                    {t.checklist.encryptedNote}
+                  </p>
+                </form>
+              )}
             </li>
           )
         })}

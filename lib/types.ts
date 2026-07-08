@@ -5,6 +5,9 @@ export type Industry = "retail" | "food" | "services" | "tech" | "manufacturing"
 
 export type ChecklistStatus = "pending" | "submitted" | "approved"
 
+// How a checklist step is completed: capturing a data value or uploading a file.
+export type StepInputKind = "data" | "upload"
+
 export interface BusinessProfileInput {
   size: BusinessSize
   industry: Industry
@@ -17,6 +20,7 @@ export interface RoadmapStep {
   description: string
   status: ChecklistStatus
   premium: boolean
+  inputKind: StepInputKind
 }
 
 export interface Roadmap {
@@ -32,6 +36,14 @@ export interface ChecklistItem {
   status: ChecklistStatus
   premium: boolean
   sort_order: number
+  inputKind: StepInputKind
+  // For "data" steps: the field label + placeholder from the catalog, so the UI
+  // can render a labeled input without shipping the whole catalog to the client.
+  dataLabel?: string
+  dataPlaceholder?: string
+  // For "data" steps: whether the user has already saved a value. The plaintext
+  // value is never sent to the client — only this boolean flag is derived server-side.
+  hasData?: boolean
 }
 
 export interface AppDocument {
