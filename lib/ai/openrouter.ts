@@ -1,17 +1,38 @@
 import "server-only"
 
 /**
- * Cliente mínimo de OpenRouter (API compatible con OpenAI) vía fetch.
+ * Cliente de IA genérico (API compatible con OpenAI) vía fetch.
  *
  * Un único punto de acceso para las dos funciones de IA de AlbaIA (el asistente
  * in-app y el análisis de roadmap). Server-side only: la key nunca llega al
- * cliente. Si OPENROUTER_API_KEY no está seteada, `available()` devuelve false y
- * cada llamador cae a su fallback determinista.
+ * cliente. Si no hay key configurada, `available()` devuelve false y cada
+ * llamador cae a su fallback determinista.
+ *
+ * Proveedor configurable por env var — cualquier endpoint compatible con la
+ * Chat Completions API de OpenAI (Fireworks, OpenRouter, Together, etc.):
+ *   AI_API_KEY   la key del proveedor (requerida para activar la IA)
+ *   AI_BASE_URL  base del endpoint, sin la ruta (default: Fireworks)
+ *   AI_MODEL     ID del modelo por defecto
+ *
+ * Se conservan como fallback las variables OPENROUTER_* previas para no romper
+ * entornos ya configurados; las AI_* tienen prioridad.
  */
 
-const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
+// Base del endpoint (sin `/chat/completions`). Fireworks por defecto.
+const BASE_URL = (
+  process.env.AI_BASE_URL ||
+  process.env.OPENROUTER_BASE_URL ||
+  "https://api.fireworks.ai/inference/v1"
+).replace(/\/$/, "")
 
-export const DEFAULT_MODEL = process.env.OPENROUTER_MODEL || "openai/gpt-4o"
+const ENDPOINT = `${BASE_URL}/chat/completions`
+
+const API_KEY = process.env.AI_API_KEY || process.env.OPENROUTER_API_KEY
+
+export const DEFAULT_MODEL =
+  process.env.AI_MODEL ||
+  process.env.OPENROUTER_MODEL ||
+  "accounts/fireworks/models/llama-v3p3-70b-instruct"
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant"
@@ -26,19 +47,21 @@ export interface ChatOptions {
   json?: boolean
 }
 
-/** true si hay una key de OpenRouter configurada. */
+/** true si hay una key de IA configurada. */
 export function available(): boolean {
-  return !!process.env.OPENROUTER_API_KEY
+  return !!API_KEY
 }
 
 function headers(): Record<string, string> {
   const h: Record<string, string> = {
-    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+    Authorization: `Bearer ${API_KEY}`,
     "Content-Type": "application/json",
   }
-  // Atribución opcional que OpenRouter muestra en su dashboard.
-  if (process.env.OPENROUTER_SITE_URL) h["HTTP-Referer"] = process.env.OPENROUTER_SITE_URL
-  if (process.env.OPENROUTER_SITE_NAME) h["X-Title"] = process.env.OPENROUTER_SITE_NAME
+  // Atribución opcional (usada por OpenRouter; inofensiva en otros proveedores).
+  const siteUrl = process.env.AI_SITE_URL || process.env.OPENROUTER_SITE_URL
+  const siteName = process.env.AI_SITE_NAME || process.env.OPENROUTER_SITE_NAME
+  if (siteUrl) h["HTTP-Referer"] = siteUrl
+  if (siteName) h["X-Title"] = siteName
   return h
 }
 
@@ -48,7 +71,7 @@ function headers(): Record<string, string> {
  * try/catch y caen a su fallback.
  */
 export async function chatCompletion(messages: ChatMessage[], opts: ChatOptions = {}): Promise<string> {
-  if (!available()) throw new Error("OPENROUTER_API_KEY is not set.")
+  if (!available()) throw new Error("AI_API_KEY is not set.")
 
   const res = await fetch(ENDPOINT, {
     method: "POST",
@@ -64,13 +87,13 @@ export async function chatCompletion(messages: ChatMessage[], opts: ChatOptions 
 
   if (!res.ok) {
     const detail = await res.text().catch(() => "")
-    throw new Error(`OpenRouter error ${res.status}: ${detail.slice(0, 200)}`)
+    throw new Error(`AI provider error ${res.status}: ${detail.slice(0, 200)}`)
   }
 
   const data = (await res.json()) as {
     choices?: { message?: { content?: string } }[]
   }
   const content = data.choices?.[0]?.message?.content?.trim()
-  if (!content) throw new Error("OpenRouter returned an empty completion.")
+  if (!content) throw new Error("AI provider returned an empty completion.")
   return content
 }
