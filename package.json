@@ -11,7 +11,9 @@
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "node --test --experimental-strip-types --import ./tests/unit/resolver.mjs tests/unit/*.spec.ts",
     "test:e2e": "playwright test",
-    "seed:demo": "tsx scripts/seed-demo.ts"
+    "seed:demo": "tsx scripts/seed-demo.ts",
+    "predev": "node scripts/env-health.mjs",
+    "prebuild": "node scripts/env-health.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.110.0",
